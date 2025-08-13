@@ -11,7 +11,12 @@ class Todoscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final todolist = context.watch<Todolist>();
     return Scaffold(
-      appBar: AppBar(title: Text("Todo List")),
+      appBar: AppBar(
+        title: Text(
+          "To-do List",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -23,12 +28,19 @@ class Todoscreen extends StatelessWidget {
                     controller: _controller,
                     decoration: InputDecoration(
                       labelText: 'Enter Task',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
-                ElevatedButton(
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: () {
                     final text = _controller.text;
 
@@ -37,11 +49,17 @@ class Todoscreen extends StatelessWidget {
                       _controller.clear();
 
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Added Task: $text')),
+                        SnackBar(
+                          content: Text('Added Task: $text'),
+                          duration: Duration(milliseconds: 800),
+                        ),
                       );
                     }
                   },
-                  child: Text('Add'),
+                  child: Text(
+                    'Add',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
@@ -51,29 +69,38 @@ class Todoscreen extends StatelessWidget {
                 itemCount: todolist.todos.length,
                 itemBuilder: (context, index) {
                   final todo = todolist.todos[index];
-                  return ListTile(
-                    leading: Checkbox(
-                      value: todo.isDone,
-                      onChanged: (_) {
-                        context.read<Todolist>().toggleTodo(index);
-                      },
-                    ),
-                    title: Text(
-                      todo.title,
-                      style: TextStyle(
-                        decoration: todo.isDone
-                            ? TextDecoration.lineThrough
-                            : null,
+                  return Card(
+                    // color: Colors.blue[50],
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: todo.isDone,
+                        onChanged: (_) {
+                          context.read<Todolist>().toggleTodo(index);
+                        },
+                      ),
+                      title: Text(
+                        todo.title,
+                        style: TextStyle(
+                          decoration: todo.isDone
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete_rounded, color: Colors.red),
+                        onPressed: () {
+                          final removedTask = todolist.todos[index].title;
+                          context.read<Todolist>().removeTodo(index);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Removed Task: $removedTask'),
+                              duration: Duration(milliseconds: 800),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    onTap: () {
-                      final removedTask = todolist.todos[index].title;
-                      context.read<Todolist>().removeTodo(index);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Removed Task: $removedTask')),
-                      );
-                    },
                   );
                 },
               ),
