@@ -7,7 +7,7 @@ class Todolist extends ChangeNotifier {
 
   List<Todo> get todos => _todos;
 
-  TodoListModel() {
+  Todolist() {
     loadTodos();
   }
 

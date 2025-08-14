@@ -87,7 +87,7 @@ class Todoscreen extends StatelessWidget {
                         ),
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete_rounded, color: Colors.red),
+                        icon: Icon(Icons.delete_rounded, color: Colors.redAccent),
                         onPressed: () {
                           final removedTask = todolist.todos[index].title;
                           context.read<Todolist>().removeTodo(index);
