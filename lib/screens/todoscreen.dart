@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo/models/tememodel.dart';
+import 'package:todo/models/thememodel.dart';
 import 'package:todo/models/todolist.dart';
 
 class Todoscreen extends StatelessWidget {
@@ -16,15 +16,15 @@ class Todoscreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "To-do List",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          // style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              context.read<Thememodel>().toggleTheme();
+              context.read<ThemeModel>().toggleTheme();
             },
             icon: Icon(
-              context.watch<Thememodel>().isDark
+              context.watch<ThemeModel>().isDark
                   ? Icons.light_mode_rounded
                   : Icons.dark_mode_rounded,
             ),
@@ -43,18 +43,18 @@ class Todoscreen extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: 'Enter Task',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        // borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 FilledButton(
-                  style: FilledButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  // style: FilledButton.styleFrom(
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(12),
+                  //   ),
+                  // ),
                   onPressed: () {
                     final text = _controller.text;
 
