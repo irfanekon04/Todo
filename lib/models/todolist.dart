@@ -1,28 +1,44 @@
 import 'todo.dart';
 import 'package:flutter/foundation.dart';
-// import 'package:shared_preferences_android/shared_preferences_android.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Todolist extends ChangeNotifier {
-  final List<Todo> _todos = [];
+  List<Todo> _todos = [];
 
   List<Todo> get todos => _todos;
 
-  // TodoListModel() {
-  //   loadTodos();
-  // }
+  TodoListModel() {
+    loadTodos();
+  }
+
+  Future<void> loadTodos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final todoStrings = prefs.getStringList('todos') ?? [];
+    _todos = todoStrings.map((e) => Todo.fromJson(e)).toList();
+    notifyListeners();
+  }
+
+  Future<void> saveTodos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final todoStrings = _todos.map((e) => e.toJson()).toList();
+    await prefs.setStringList('todos', todoStrings);
+  }
 
   void addTodo(String title) {
     _todos.add(Todo(title));
+    saveTodos();
     notifyListeners();
   }
 
   void removeTodo(int index) {
     _todos.removeAt(index);
+    saveTodos();
     notifyListeners();
   }
 
   void toggleTodo(int index) {
     _todos[index].isDone = !_todos[index].isDone;
+    saveTodos();
     notifyListeners();
   }
 }
