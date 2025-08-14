@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/models/tememodel.dart';
 import 'package:todo/models/todolist.dart';
 
 class Todoscreen extends StatelessWidget {
@@ -10,12 +11,25 @@ class Todoscreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todolist = context.watch<Todolist>();
+    final todos = todolist.sortedTodos;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "To-do List",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.read<Thememodel>().toggleTheme();
+            },
+            icon: Icon(
+              context.watch<Thememodel>().isDark
+                  ? Icons.light_mode_rounded
+                  : Icons.dark_mode_rounded,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -64,18 +78,20 @@ class Todoscreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 20),
+
             Expanded(
               child: ListView.builder(
-                itemCount: todolist.todos.length,
+                itemCount: todos.length,
                 itemBuilder: (context, index) {
-                  final todo = todolist.todos[index];
+                  final todo = todos[index];
+                  final originalIndex = todolist.todos.indexOf(todo);
                   return Card(
                     // color: Colors.blue[50],
                     child: ListTile(
                       leading: Checkbox(
                         value: todo.isDone,
                         onChanged: (_) {
-                          context.read<Todolist>().toggleTodo(index);
+                          context.read<Todolist>().toggleTodo(originalIndex);
                         },
                       ),
                       title: Text(
@@ -87,10 +103,13 @@ class Todoscreen extends StatelessWidget {
                         ),
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete_rounded, color: Colors.redAccent),
+                        icon: Icon(
+                          Icons.delete_rounded,
+                          color: Colors.redAccent,
+                        ),
                         onPressed: () {
-                          final removedTask = todolist.todos[index].title;
-                          context.read<Todolist>().removeTodo(index);
+                          final removedTask = todo.title;
+                          context.read<Todolist>().removeTodo(originalIndex);
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

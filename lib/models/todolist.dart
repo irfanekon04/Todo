@@ -7,6 +7,18 @@ class Todolist extends ChangeNotifier {
 
   List<Todo> get todos => _todos;
 
+  List<Todo> get sortedTodos {
+    final sortedList = List<Todo>.from(_todos);
+    sortedList.sort((a,b) {
+      if (a.isDone == b.isDone)
+      {
+        return 0; // keep original order if both are done or both not done
+      }
+      return a.isDone ? 1 : -1; // incomplete first
+    });
+    return sortedList;
+  }
+  
   Todolist() {
     loadTodos();
   }
