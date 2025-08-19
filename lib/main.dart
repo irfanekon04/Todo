@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
     final themeModel = context.watch<ThemeModel>();
     return MaterialApp(
       title: 'Todo List',
-      debugShowCheckedModeBanner: false,
       themeMode: themeModel.currentTheme,
       theme: ThemeData(
         colorSchemeSeed: Colors.blue,
